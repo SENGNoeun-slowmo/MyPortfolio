@@ -6,6 +6,8 @@ import {
 import { SiTailwindcss, SiMysql, SiTypescript } from "react-icons/si";
 import useFetchData from "../Use/useFetchData";
 import Experience from "./Experience";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 
 const iconMap: Record<string, JSX.Element> = {
   HTML: <FaHtml5 className="text-orange-500" />,
@@ -23,8 +25,8 @@ const iconMap: Record<string, JSX.Element> = {
   Git: <FaGit className="text-red-500" />,
 };
 
-const url = "http://localhost:5000/api/skills";
-
+// const url = "http://localhost:5000/api/skills";
+const url = `${API_URL}/api/skills`;
 function Home() {
   const { data, isLoading, isError } = useFetchData(url);
   const list = data|| [];
