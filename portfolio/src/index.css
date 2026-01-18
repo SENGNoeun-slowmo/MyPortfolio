@@ -1,0 +1,191 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Menu Styles */
+.menu {
+  float: left;
+}
+
+.menu ul li {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}
+.phoneslide{
+    display: none;
+}
+.menu-item {
+  position: relative;
+  padding-bottom: 6px;
+}
+
+.menu-item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background: white;
+  transition: width 0.3s ease;
+}
+
+.menu-item:hover::after {
+  width: 100%;
+}
+
+/* Row & Box Styles */
+.row {
+  padding: 0;
+  margin: 0;
+}
+
+.box-skill {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform-origin: center;
+}
+
+.box-skill:hover {
+  transform: skew(20deg, 10deg);
+  z-index: 10;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.row:hover .box-skill {
+  filter: blur(2px) brightness(0.9);
+}
+
+.row .box-skill:hover {
+  filter: none;
+}
+
+/* Box Media */
+.box-media {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform-origin: center;
+  cursor: pointer;
+}
+
+.box-media:hover {
+  transform: rotate(0.3turn);
+}
+.box-skill1{
+  transform: rotate(0.1turn);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform-origin: center;
+}
+.box-skill1 div:hover{
+ transform: rotate(-0.1turn);
+   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform-origin: center;
+  cursor: pointer
+}
+
+/* Box Images */
+.box1-image {
+  display: none;
+}
+
+/* Phone Menu */
+.phone-menu,
+.phone-box1 {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .will-change-transform {
+    will-change: auto !important;
+  }
+}
+/* Responsive Styles */
+
+/* Small devices (≤575px) */
+@media (max-width: 575px) {
+  .header,
+  .box2-image {
+    display: none;
+  }
+
+  .header2 {
+    display: flex;
+  }
+.phoneslide{
+   display: block;
+}
+  .box1-image {
+    display: block;
+    z-index: 10;
+    width: 500px;
+    
+  }
+
+  .box1 {
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    height: 50%;
+  }
+
+  .box1 h1 span p {
+    font-size: x-large;
+  }
+
+  .phone-box1,
+  .box-title,
+  .box-media {
+    display: block;
+  }
+
+  .phone-menu {
+    display: flex;
+  }
+   .box1-media {
+    justify-content: center;
+  }
+   
+}
+
+/* Small to Medium devices (576px–768px) */
+@media (min-width: 576px) and (max-width: 768px) {
+  .box1 {
+    height: 40vh;
+    width: 100vw;
+  }
+
+  .box2-image {
+    display: none;
+  }
+
+  .box1-image {
+    display: block;
+    width: 500px;
+    height: 55vh;
+   
+  }
+  .box1-media {
+    justify-content: center;
+  }
+}
+
+/* Medium devices (≥768px) */
+@media (min-width: 768px) {
+  .box1 {
+    height: 60vh;
+  }
+}
+
+/* Large devices (≥992px) */
+@media (min-width: 992px) {
+  /* Add large device styles here if needed */
+}
+
+/* Extra large devices (≥1200px) */
+@media (min-width: 1200px) {
+  /* Add extra large device styles here if needed */
+}
