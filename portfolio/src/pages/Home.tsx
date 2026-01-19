@@ -17,6 +17,7 @@ import { SiTailwindcss, SiMysql, SiTypescript } from "react-icons/si";
 
 import useFetchData from "../Use/useFetchData";
 import Experience from "./Experience";
+import laoding from "../assets/loading-flash.webp"
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 const SKILLS_URL = `${API_URL}/api/skills`;
@@ -133,8 +134,12 @@ function Home() {
         </h1>
 
         {isLoading && (
-          <div className="text-center py-20 text-gray-500">
-            Loading skills...
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <img 
+              src={laoding} 
+              alt="Loading..." 
+              className="w-40 h-40 object-contain animate-pulse"
+            />
           </div>
         )}
 
