@@ -35,25 +35,7 @@ const url="http://localhost:5000/api/skills";
 function Home() {
   const {data,iserror ,isloading}=fetchData(url)
   const list = data?.data || [];
-  // const [skills, setSkills] = useState<Skill[]>([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState<string | null>(null);
 
-  // useEffect(() => {
-  //   const fetchSkills = async () => {
-  //     try {
-  //       const { data } = await axios.get("http://localhost:5000/api/skills");
-  //       setSkills(data);
-  //     } catch (err) {
-  //       console.error("Failed to load skills:", err);
-  //       setError("Couldn't load skills. Please try again later.");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchSkills();
-  // }, []);
 
   const mediaIcons = [
     { icon: <FaFacebook />, name: "Facebook" },

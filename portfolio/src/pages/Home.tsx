@@ -1,3 +1,4 @@
+// src/pages/Home.tsx
 import React, { type JSX } from "react";
 import {
   FaHtml5,
@@ -15,12 +16,15 @@ import {
 } from "react-icons/fa";
 import { SiTailwindcss, SiMysql, SiTypescript } from "react-icons/si";
 
-import useFetchData from "../Use/useFetchData";
-import Experience from "./Experience";
-import laoding from "../assets/loading-flash.webp"
+import useFetchData from "../Use/useFetchData"; // adjust path
+import Profile from "./Profile";
+import Skills from "../pages/Skills";     // ← renamed for clarity (was Skill)
+import Experiences from "../pages/Experience";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-const SKILLS_URL = `${API_URL}/api/skills`;
+const SKILLS_URL      = `${API_URL}/api/skills`;
+const EXPERIENCES_URL = `${API_URL}/api/experiences`;
+const PROFILE_URL     = `${API_URL}/api/profiles`;
 
 /* ================= TYPES ================= */
 type Skill = {
@@ -30,165 +34,141 @@ type Skill = {
   created_at?: string | null;
 };
 
-/* ================= HELPERS ================= */
-const normalizeSkillName = (name: string) =>
-  name.trim().toLowerCase();
-
-/* ================= ICON MAP ================= */
-const iconMap: Record<string, JSX.Element> = {
-  html: <FaHtml5 className="text-orange-500" />,
-  css: <FaCss3Alt className="text-blue-500" />,
-  javascript: <FaJs className="text-yellow-400" />,
-  react: <FaReact className="text-sky-400" />,
-  "tailwind css": <SiTailwindcss className="text-sky-400" />,
-  php: <FaPhp className="text-purple-600" />,
-  laravel: <FaLaravel className="text-red-500" />,
-  "node.js": <FaNodeJs className="text-green-600" />,
-  mysql: <SiMysql className="text-blue-600" />,
-  python: <FaPython className="text-yellow-500" />,
-  typescript: <SiTypescript className="text-blue-500" />,
-  git: <FaGit className="text-red-500" />,
+type Experience = {
+  id: string;
+  company_name: string;
+  role: string;
+  start_date: string;
+  end_date: string;
+  responsibilities: string[];
 };
 
-/* ================= COMPONENT ================= */
-function Home() {
-  const { data, isLoading, isError } = useFetchData(SKILLS_URL);
+type  Profiles ={
+  id: string;
+  full_name: string;
+  title: string;
+  bio: string;
+  profile_image_: string;
+}
 
-  const skills: Skill[] = (data || []).sort((a, b) =>
+/* ================= HELPERS ================= */
+const normalizeSkillName = (name: string) => name.trim().toLowerCase();
+
+const iconMap: Record<string, JSX.Element> = {
+  html:           <FaHtml5       className="text-orange-500 text-5xl" />,
+  css:            <FaCss3Alt     className="text-blue-500 text-5xl" />,
+  javascript:     <FaJs          className="text-yellow-400 text-5xl" />,
+  react:          <FaReact       className="text-sky-400 text-5xl" />,
+  "tailwind css": <SiTailwindcss className="text-sky-400 text-5xl" />,
+  php:            <FaPhp         className="text-purple-600 text-5xl" />,
+  laravel:        <FaLaravel     className="text-red-500 text-5xl" />,
+  "node.js":      <FaNodeJs      className="text-green-600 text-5xl" />,
+  mysql:          <SiMysql       className="text-blue-600 text-5xl" />,
+  python:         <FaPython      className="text-yellow-500 text-5xl" />,
+  typescript:     <SiTypescript  className="text-blue-500 text-5xl" />,
+  git:            <FaGit         className="text-red-500 text-5xl" />,
+};
+
+/* ================= SOCIAL LINKS ================= */
+const socialLinks = [
+  {
+    icon: <FaFacebook className="text-blue-600 text-4xl" />,
+    name: "Facebook",
+    url: "https://facebook.com/sengnoeun", // ← UPDATE WITH YOUR REAL LINKS!
+  },
+  {
+    icon: <FaTelegram className="text-sky-500 text-4xl" />,
+    name: "Telegram",
+    url: "https://t.me/sengnoeun",
+  },
+  {
+    icon: <FaInstagram className="text-pink-600 text-4xl" />,
+    name: "Instagram",
+    url: "https://instagram.com/sengnoeun",
+  },
+];
+
+/* ================= MAIN COMPONENT ================= */
+function Home() {
+  // Fetch profile (assuming API returns single profile object)
+  const {
+    data: profileData,
+    isLoading: profileLoading,
+    isError: profileError,
+  } = useFetchData<Profiles[]>(PROFILE_URL); // ← single object
+
+  // Fetch skills
+  const {
+    data: skillsData,
+    isLoading: skillsLoading,
+    isError: skillsError,
+  } = useFetchData<Skill[]>(SKILLS_URL);
+
+  // Fetch experiences
+  const {
+    data: experiencesData,
+    isLoading: expLoading,
+    isError: expError,
+  } = useFetchData<Experience[]>(EXPERIENCES_URL);
+
+  // Derived & sorted data
+  const profile: Profiles | null = profileData?.[0] || null;
+  const skills = (skillsData || []).sort((a, b) =>
     (a.created_at || "").localeCompare(b.created_at || "")
   );
-
-  const mediaIcons = [
-    { icon: <FaFacebook />, name: "Facebook" },
-    { icon: <FaTelegram />, name: "Telegram" },
-    { icon: <FaInstagram />, name: "Instagram" },
-  ];
+  const experiences = experiencesData || [];
 
   return (
-    <>
-      {/* ================= HERO ================= */}
-      <section className="w-full h-[70vh]">
-        <div className="h-full grid grid-cols-1 md:grid-cols-2 items-center">
-          {/* Mobile Image */}
-          <div className="md:hidden h-[45vh]">
-            <img
-              className="w-full h-full object-cover"
-              src="https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg"
-              alt="profile"
-            />
-          </div>
+    <main className="min-h-screen bg-blue-50">
+      {/* ================= HERO / PROFILE ================= */}
+      <Profile
+        isLoading={profileLoading}
+        isError={profileError}
+        profile={profile}
+      />
 
-          {/* Text */}
-          <div className="flex justify-center px-6 md:px-12">
-            <div className="max-w-xl">
-              <h1 className="text-3xl md:text-4xl text-gray-500">
-                Hello <span className="text-gray-900 font-semibold">I'm Seng Noeun,</span>
-              </h1>
-
-              <h1 className="text-3xl md:text-4xl mt-2 text-gray-900 font-semibold">
-                Frontend <span className="text-gray-500 font-normal">Developer</span>
-              </h1>
-
-              <h1 className="text-3xl md:text-4xl mt-2 text-gray-500">
-                Based In <span className="text-gray-900 font-semibold">Cambodia</span>
-              </h1>
-
-              <p className="text-base text-gray-600 mt-6 leading-relaxed">
-                Passionate frontend developer focused on building clean,
-                scalable and user-friendly interfaces.
-              </p>
-            </div>
-          </div>
-
-          {/* Desktop Image */}
-          <div className="hidden md:flex justify-center">
-            <img
-              className="w-[80%] max-w-lg object-contain"
-              src="https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg"
-              alt="profile"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ================= SOCIAL ================= */}
-      <section className="container mx-auto mt-16 px-6">
-        <div className="flex gap-6">
-          {mediaIcons.map((m, i) => (
-            <div
-              key={i}
-              className="flex flex-col items-center px-6 py-4 border rounded-xl
-                         hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer"
+      {/* ================= SOCIAL LINKS ================= */}
+      <section className="container mx-auto px-6 py-16 md:py-20">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800">
+          Connect with Me
+        </h2>
+        <div className="flex flex-wrap justify-center gap-8 md:gap-12">
+          {socialLinks.map((social, index) => (
+            <a
+              key={index}
+              href={social.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col items-center p-6 bg-white rounded-2xl shadow-md 
+                         hover:shadow-xl hover:-translate-y-2 transition-all duration-300 min-w-[140px]"
             >
-              <div className="text-2xl mb-1">{m.icon}</div>
-              <span className="text-sm font-medium text-gray-700">{m.name}</span>
-            </div>
+              <div className="mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                {social.icon}
+              </div>
+              <span className="text-lg font-medium text-gray-700 group-hover:text-indigo-600 transition-colors">
+                {social.name}
+              </span>
+            </a>
           ))}
         </div>
       </section>
-
+       
       {/* ================= SKILLS ================= */}
-      <section className="container mx-auto px-6 mt-20 pb-20">
-        <h1 className="text-center text-4xl md:text-5xl font-semibold mb-16">
-          My Skills
-        </h1>
-
-        {isLoading && (
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <img 
-              src={laoding} 
-              alt="Loading..." 
-              className="w-40 h-40 object-contain animate-pulse"
-            />
-          </div>
-        )}
-
-        {isError && (
-          <div className="text-center py-20 text-red-500">
-            Failed to load skills
-          </div>
-        )}
-
-        {!isLoading && !isError && skills.length === 0 && (
-          <div className="text-center py-20 text-gray-400">
-            No skills found
-          </div>
-        )}
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-          {skills.map((skill) => {
-            const key = normalizeSkillName(skill.name);
-
-            return (
-              <div
-                key={skill.id}
-                className="h-40 flex flex-col items-center justify-center
-                           bg-white border-4 border-black rounded-xl
-                           shadow-sm hover:shadow-lg hover:-translate-y-1
-                           transition-all"
-              >
-                <div className="text-5xl mb-3">
-                  {iconMap[key] || "⚡"}
-                </div>
-
-                <span className="font-medium text-gray-800">
-                  {skill.name}
-                </span>
-
-                {skill.level && (
-                  <span className="text-xs text-gray-500 mt-1 text-center px-2">
-                    {skill.level}
-                  </span>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </section>
+      <Skills
+        isLoading={skillsLoading}
+        isError={skillsError}
+        skills={skills}
+        normalizeSkillName={normalizeSkillName}
+        iconMap={iconMap}
+      />
 
       {/* ================= EXPERIENCE ================= */}
-      <Experience />
-    </>
+      <Experiences
+        isLoading={expLoading}
+        isError={expError}
+        experiences={experiences}
+      />
+    </main>
   );
 }
 

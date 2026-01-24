@@ -1,53 +1,117 @@
 import React from "react";
 
-function Experience() {
-  // You can add more experiences in this array
-  const experiences = [
-    {
-      role: "Frontend Developer",
-      company: "ABC Tech Solutions",
-      duration: "Jan 2023 - Present",
-      responsibilities: [
-        "Developed responsive web applications using React.js and Tailwind CSS.",
-        "Collaborated with designers to create UI/UX for multiple projects.",
-        "Optimized web pages for performance and SEO.",
-      ],
-    },
-    {
-      role: "Web Developer Intern",
-      company: "XYZ Digital Agency",
-      duration: "Jun 2022 - Dec 2022",
-      responsibilities: [
-        "Assisted in building websites using HTML, CSS, and JavaScript.",
-        "Implemented dynamic UI components using React.",
-        "Performed cross-browser testing and debugging.",
-      ],
-    },
-  ];
+interface Experience {
+  id: string;
+  company_name: string;
+  role: string;
+  start_date: string;
+  end_date: string;
+  responsibilities: string[]|null;
+}
 
+interface ExperienceProps {
+  isLoading: boolean;
+  isError: boolean;
+  experiences?: Experience[] | null; // Still allow null/undefined from parent
+}
+
+const formatDate = (dateStr: string): string => {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return dateStr; // Fallback for invalid dates
+  return date.toLocaleDateString("en-US", { year: "numeric", month: "short" });
+};
+
+const formatDuration = (start: string, end: string): string => {
+  const startFormatted = formatDate(start);
+  const endFormatted = end.toLowerCase() === "present" ? "Present" : formatDate(end);
+  return `${startFormatted} — ${endFormatted}`;
+};
+
+function Experience({
+  isLoading,
+  isError,
+  experiences: rawExperiences = [], // Default if undefined
+}: ExperienceProps) {
+  // Normalize to array (handles null, undefined, or actual array)
+  const experiences = rawExperiences ?? [];
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <section className="container mx-auto py-16 px-6 text-center">
+        <h2 className="text-4xl md:text-5xl font-bold mb-8 text-gray-900">
+          Professional Experience
+        </h2>
+        <p className="text-xl text-gray-600">Loading experiences...</p>
+      </section>
+    );
+  }
+
+  // Error state
+  if (isError) {
+    return (
+      <section className="container mx-auto py-16 px-6 text-center">
+        <h2 className="text-4xl md:text-5xl font-bold mb-8 text-gray-900">
+          Professional Experience
+        </h2>
+        <p className="text-xl text-red-600 font-medium">
+          Failed to load experiences. Please try again later.
+        </p>
+      </section>
+    );
+  }
+
+  // Empty state (now safe even if null)
+  if (experiences.length === 0) {
+    return (
+      <section className="container mx-auto py-16 px-6 text-center">
+        <h2 className="text-4xl md:text-5xl font-bold mb-8 text-gray-900">
+          Professional Experience
+        </h2>
+        <p className="text-xl text-gray-600">
+          No experience data available yet.
+        </p>
+      </section>
+    );
+  }
+
+  // Success state
   return (
-    <div className="container mx-auto my-12 px-4">
-      <h2 className="text-4xl font-bold text-center mb-8">Experience</h2>
-      <div className="grid gap-6">
-        {experiences.map((exp, index) => (
+    <section className="container mx-auto py-20 px-6">
+      <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-gray-900">
+        Professional Experience
+      </h2>
+
+      <div className="grid gap-8 md:gap-10 md:grid-cols-2 xl:grid-cols-3">
+        {experiences.map((exp) => (
           <div
-            key={index}
-            className="bg-white shadow-lg rounded-lg p-6 hover:scale-105 transform transition duration-300"
+            key={exp.id}
+            className="group bg-white rounded-2xl shadow-lg p-8 
+                       border border-gray-100 hover:shadow-2xl hover:scale-[1.02] 
+                       transition-all duration-300"
           >
-            <h3 className="text-2xl font-semibold">{exp.role}</h3>
-            <p className="text-gray-500">{exp.company}</p>
-            <p className="text-gray-400 italic mb-4">{exp.duration}</p>
-            <ul className="list-disc list-inside space-y-2">
-              {exp.responsibilities.map((task, i) => (
-                <li key={i} className="text-gray-700">
-                  {task}
-                </li>
-              ))}
-            </ul>
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+              {exp.role}
+            </h3>
+            <p className="text-xl font-semibold text-indigo-600 mb-1">
+              {exp.company_name}
+            </p>
+            <p className="text-base text-gray-500 italic mb-6">
+              {formatDuration(exp.start_date, exp.end_date)}
+            </p>
+
+            <ul className="list-disc list-inside space-y-3 text-gray-700">
+  {(exp.responsibilities ?? []).map((task, i) => (  // ← Add ?? [] here!
+    <li key={i} className="leading-relaxed">
+      {task}
+    </li>
+  ))}
+</ul>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
