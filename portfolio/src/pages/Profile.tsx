@@ -15,71 +15,86 @@ interface ProfileProps {
 }
 
 function Profile({ isLoading, isError, profile = null }: ProfileProps) {
-  // Loading state
+  // ─── Loading ────────────────────────────────────────────────
   if (isLoading) {
     return (
-      <section className="container mx-auto py-16 px-6 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold mb-8 text-gray-900">
+      <section className="container mx-auto py-12 px-4 sm:px-6 text-center">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-gray-900">
           Professional Profile
         </h2>
-        <p className="text-xl text-gray-600">Loading profile...</p>
+        <p className="text-lg sm:text-xl text-gray-600">Loading profile...</p>
       </section>
     );
   }
 
-  // Error state
+  // ─── Error ──────────────────────────────────────────────────
   if (isError) {
     return (
-      <section className="container mx-auto py-16 px-6 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold mb-8 text-gray-900">
+      <section className="container mx-auto py-12 px-4 sm:px-6 text-center">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-gray-900">
           Professional Profile
         </h2>
-        <p className="text-xl text-red-600 font-medium">
+        <p className="text-lg sm:text-xl text-red-600 font-medium">
           Failed to load profile. Please try again later.
         </p>
       </section>
     );
   }
 
-  // Empty state
+  // ─── No data ────────────────────────────────────────────────
   if (!profile) {
     return (
-      <section className="container mx-auto py-16 px-6 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold mb-8 text-gray-900">
+      <section className="container mx-auto py-12 px-4 sm:px-6 text-center">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-gray-900">
           Professional Profile
         </h2>
-        <p className="text-xl text-gray-600">No profile data available yet.</p>
+        <p className="text-lg sm:text-xl text-gray-600">No profile data available yet.</p>
       </section>
     );
   }
 
+  // ─── Main content ───────────────────────────────────────────
   return (
-    <section className="w-full min-h-[80vh] flex items-center py-16 md:py-0 bg-gradient-to-br from-indigo-50 via-white to-sky-50">
-      <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 items-center gap-12">
-        {/* Text */}
-        <div className="text-center md:text-left">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900">
-            Hello, I'm <span className="text-indigo-600">{profile.full_name}</span>
-          </h1>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl mt-3 font-bold text-gray-800">
-            {profile.title} <span className="text-gray-600">Developer</span>
-          </h2>
-          <p className="text-xl md:text-2xl mt-4 text-gray-600">
-            Based in <span className="font-semibold text-gray-900">Cambodia</span>
-          </p>
+    <section className="w-full min-h-[70vh] md:min-h-[85vh] lg:min-h-[90vh] flex items-center py-12 md:py-16 lg:py-24 bg-gradient-to-br from-indigo-50 via-white to-sky-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-10 lg:gap-16 xl:gap-20">
+          {/* Left – Text */}
+          <div className="w-full md:w-1/2 text-center md:text-left space-y-6 md:space-y-8 lg:space-y-10">
+            <h1 className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-gray-900 leading-tight tracking-tight">
+              Hello, I'm <span className="text-indigo-600">{profile.full_name}</span>
+            </h1>
 
-          <p className="text-lg md:text-xl text-gray-700 mt-8 max-w-2xl mx-auto md:mx-0 leading-relaxed">
-            {profile.bio}
-          </p>
-        </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800">
+              {profile.title}
+              <span className="text-gray-600"> Developer</span>
+            </h2>
 
-        {/* Image */}
-        <div className="flex justify-center md:justify-end">
-          <img
-            className="w-80 md:w-96 lg:w-[450px] rounded-3xl shadow-2xl object-cover border-8 border-white"
-            src={profile.profile_image}
-            alt={`${profile.full_name} - ${profile.title} Developer`}
-          />
+            <p className="text-lg sm:text-xl md:text-xl lg:text-2xl text-gray-700 font-medium">
+              Based in <span className="text-gray-900 font-semibold">Cambodia</span>
+            </p>
+
+            <p className="text-base sm:text-lg md:text-xl lg:text-xl text-gray-700 leading-relaxed max-w-3xl mx-auto md:mx-0">
+              {profile.bio}
+            </p>
+          </div>
+
+          {/* Right – Image */}
+          <div className="w-full md:w-1/2 flex justify-center md:justify-end mt-8 md:mt-0">
+            <div className="relative w-64 xs:w-72 sm:w-80 md:w-96 lg:w-[420px] xl:w-[480px] max-w-full">
+              <img
+                className={`
+                  w-full aspect-square object-cover 
+                  rounded-2xl sm:rounded-3xl 
+                  shadow-2xl 
+                  border-8 border-white 
+                  transition-transform duration-500 hover:scale-[1.02]
+                `}
+                src={profile.profile_image}
+                alt={`${profile.full_name} – ${profile.title} Developer`}
+                loading="eager"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>
